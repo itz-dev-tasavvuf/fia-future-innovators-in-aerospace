@@ -2,19 +2,32 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import SpaceGlobe from "@/components/SpaceGlobe";
 
+interface User {
+  id: string;
+  name: string;
+  location: string;
+  lat?: number;
+  lng?: number;
+  latitude?: number;
+  longitude?: number;
+  interests: string[];
+  dream: string;
+}
+
 interface GlobeViewProps {
-  users: Array<{
-    id: string;
-    name: string;
-    location: string;
-    lat: number;
-    lng: number;
-    interests: string[];
-    dream: string;
-  }>;
+  users: User[];
 }
 
 const GlobeView = ({ users }: GlobeViewProps) => {
+  // Filter users that have coordinates and transform the data
+  const usersWithCoords = users
+    .filter(user => (user.lat && user.lng) || (user.latitude && user.longitude))
+    .map(user => ({
+      ...user,
+      lat: user.lat || user.latitude || 0,
+      lng: user.lng || user.longitude || 0
+    }));
+
   return (
     <Card className="bg-slate-800/50 border-purple-500/30 mb-8">
       <CardHeader>
@@ -25,7 +38,7 @@ const GlobeView = ({ users }: GlobeViewProps) => {
       </CardHeader>
       <CardContent>
         <div className="w-full" style={{ height: 'calc(100vh - 300px)' }}>
-          <SpaceGlobe users={users} fullscreen={true} />
+          <SpaceGlobe users={usersWithCoords} fullscreen={true} />
         </div>
       </CardContent>
     </Card>

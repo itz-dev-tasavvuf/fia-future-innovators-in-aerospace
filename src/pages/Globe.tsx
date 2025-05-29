@@ -38,6 +38,15 @@ const Globe = () => {
     return matchesSearch && matchesInterest;
   });
 
+  // Filter and transform users for the globe (only those with coordinates)
+  const globeUsers = filteredUsers
+    .filter(user => (user.lat && user.lng) || (user.latitude && user.longitude))
+    .map(user => ({
+      ...user,
+      lat: user.lat || user.latitude || 0,
+      lng: user.lng || user.longitude || 0
+    }));
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
@@ -88,7 +97,7 @@ const Globe = () => {
           </Select>
           <div className="flex items-center gap-2">
             <Filter className="h-4 w-4 text-purple-200" />
-            <span className="text-purple-200 text-sm">{filteredUsers.length} results</span>
+            <span className="text-purple-200 text-sm">{globeUsers.length} results</span>
           </div>
         </div>
 
@@ -102,7 +111,7 @@ const Globe = () => {
             </CardHeader>
             <CardContent className="flex justify-center pb-6">
               <div className="w-full h-[70vh]">
-                <SpaceGlobe users={filteredUsers} fullscreen={true} />
+                <SpaceGlobe users={globeUsers} fullscreen={true} />
               </div>
             </CardContent>
           </Card>
