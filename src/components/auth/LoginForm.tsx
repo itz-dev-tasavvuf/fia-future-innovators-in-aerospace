@@ -38,6 +38,7 @@ const LoginForm = () => {
         description: "Successfully logged in to FIA.",
       });
 
+      // Redirect to discover page instead of discover
       navigate("/discover");
     } catch (error) {
       console.error('Login error:', error);
