@@ -40,11 +40,16 @@ const Globe = () => {
 
   // Filter and transform users for the globe (only those with coordinates)
   const globeUsers = filteredUsers
-    .filter(user => (user.lat && user.lng) || (user.latitude && user.longitude))
+    .filter(user => {
+      // Check for coordinates in either format
+      const hasLatLng = 'lat' in user && 'lng' in user && user.lat && user.lng;
+      const hasLatitudeLongitude = 'latitude' in user && 'longitude' in user && user.latitude && user.longitude;
+      return hasLatLng || hasLatitudeLongitude;
+    })
     .map(user => ({
       ...user,
-      lat: user.lat || user.latitude || 0,
-      lng: user.lng || user.longitude || 0
+      lat: ('lat' in user && user.lat) || ('latitude' in user && user.latitude) || 0,
+      lng: ('lng' in user && user.lng) || ('longitude' in user && user.longitude) || 0
     }));
 
   if (loading) {
