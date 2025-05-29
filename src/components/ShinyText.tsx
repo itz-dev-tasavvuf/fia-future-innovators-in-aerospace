@@ -20,14 +20,14 @@ const ShinyText: React.FC<ShinyTextProps> = ({
 
   return (
     <span
-      className={`inline-block bg-gradient-to-r from-current via-white to-current bg-clip-text text-transparent animate-shine ${className}`}
+      className={`inline-block bg-gradient-to-r from-current via-white to-current bg-clip-text text-transparent ${className}`}
       style={{
         backgroundSize: '200% auto',
         animation: `shine ${speed}s ease-in-out infinite`,
       }}
     >
       {text}
-      <style jsx>{`
+      <style>{`
         @keyframes shine {
           0% {
             background-position: -200% center;
@@ -35,9 +35,6 @@ const ShinyText: React.FC<ShinyTextProps> = ({
           100% {
             background-position: 200% center;
           }
-        }
-        .animate-shine {
-          animation: shine ${speed}s ease-in-out infinite;
         }
       `}</style>
     </span>
