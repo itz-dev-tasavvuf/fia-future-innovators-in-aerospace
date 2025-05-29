@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -91,21 +92,22 @@ const Globe = () => {
           </div>
         </div>
 
-      <PixelCard variant="pink" className="rounded-3xl">
-        <Card className="bg-transparent border-transparent rounded-3xl">
-          <CardHeader className="text-center pb-4">
-            <CardTitle className="text-white text-3xl font-bold">Interactive Global Map</CardTitle>
-            <CardDescription className="text-purple-200">
-              Click and drag to explore • Hover over pins to see profiles
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="flex justify-center pb-6">
-            <div className="w-full h-[70vh]">
-              <SpaceGlobe users={filteredUsers} fullscreen={true} />
-            </div>
-          </CardContent>
-        </Card>
-      </PixelCard>
+        <PixelCard variant="pink" className="rounded-3xl">
+          <Card className="bg-transparent border-transparent rounded-3xl">
+            <CardHeader className="text-center pb-4">
+              <CardTitle className="text-white text-3xl font-bold">Interactive Global Map</CardTitle>
+              <CardDescription className="text-purple-200">
+                Click and drag to explore • Hover over pins to see profiles
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex justify-center pb-6">
+              <div className="w-full h-[70vh]">
+                <SpaceGlobe users={filteredUsers} fullscreen={true} />
+              </div>
+            </CardContent>
+          </Card>
+        </PixelCard>
+      </div>
     </div>
   );
 };
