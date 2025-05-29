@@ -38,8 +38,8 @@ const LoginForm = () => {
         description: "Successfully logged in to FIA.",
       });
 
-      // Redirect to discover page instead of discover
-      navigate("/discover");
+      // Redirect to authenticated home page
+      navigate("/home");
     } catch (error) {
       console.error('Login error:', error);
       toast({

@@ -17,9 +17,9 @@ const Header = () => {
   };
 
   const handleHomeClick = () => {
-    // If user is logged in, take them to discover page, otherwise home
+    // If user is logged in, take them to authenticated home page, otherwise home
     if (user) {
-      navigate("/discover");
+      navigate("/home");
     } else {
       navigate("/");
     }
