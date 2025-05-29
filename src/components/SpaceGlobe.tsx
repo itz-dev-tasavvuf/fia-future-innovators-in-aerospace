@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Globe from "react-globe.gl";
 
 interface User {
-  id: number;
+  id: string | number;
   name: string;
   lat: number;
   lng: number;
