@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,10 +7,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { MapPin, Users, Filter, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import SpaceGlobe from "@/components/SpaceGlobe";
-import { mockUsers } from "@/data/mockData";
+import { useProfiles } from "@/hooks/useProfiles";
 
 const Discover = () => {
   const navigate = useNavigate();
+  const { profiles: allUsers, loading } = useProfiles();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedInterest, setSelectedInterest] = useState("all");
   const [viewMode, setViewMode] = useState<"grid" | "globe">("grid");
@@ -27,7 +27,7 @@ const Discover = () => {
     "Satellite Technology"
   ];
 
-  const filteredUsers = mockUsers.filter(user => {
+  const filteredUsers = allUsers.filter(user => {
     const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          user.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          user.dream.toLowerCase().includes(searchTerm.toLowerCase());
@@ -38,9 +38,17 @@ const Discover = () => {
     return matchesSearch && matchesInterest;
   });
 
-  const handleUserClick = (userId: number) => {
+  const handleUserClick = (userId: string) => {
     navigate(`/profile/${userId}`);
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
+        <div className="text-white text-xl">Loading community...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
@@ -48,7 +56,7 @@ const Discover = () => {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-4xl font-bold text-white mb-2">Discover Community</h1>
-            <p className="text-purple-200">Connect with {mockUsers.length} space enthusiasts worldwide</p>
+            <p className="text-purple-200">Connect with {allUsers.length} space enthusiasts worldwide</p>
           </div>
           <Button 
             onClick={() => navigate("/")}
@@ -98,32 +106,32 @@ const Discover = () => {
             </Button>
           </div>
         </div>
+      
+      {viewMode === "globe" ? (
+        <Card className="bg-slate-800/50 border-purple-500/30 mb-8">
+          <CardHeader>
+            <CardTitle className="text-white">Global Community Map</CardTitle>
+            <CardDescription className="text-purple-200">
+              Explore where space enthusiasts are located around the world (click on points to view profiles)
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="w-full" style={{ height: 'calc(100vh - 300px)' }}>
+              <SpaceGlobe users={filteredUsers} fullscreen={true} />
+            </div>
+          </CardContent>
+        </Card>
+      ) : null}
 
-        {viewMode === "globe" ? (
-          <Card className="bg-slate-800/50 border-purple-500/30 mb-8">
-            <CardHeader>
-              <CardTitle className="text-white">Global Community Map</CardTitle>
-              <CardDescription className="text-purple-200">
-                Explore where space enthusiasts are located around the world (click on points to view profiles)
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="w-full" style={{ height: 'calc(100vh - 300px)' }}>
-                <SpaceGlobe users={filteredUsers} fullscreen={true} />
-              </div>
-            </CardContent>
-          </Card>
-        ) : null}
-
-        {viewMode === "grid" && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredUsers.map((user) => (
-              <Card 
-                key={user.id} 
-                className="bg-slate-800/50 border-purple-500/30 hover:border-purple-400 transition-colors cursor-pointer transform hover:scale-105 duration-200"
-                onClick={() => handleUserClick(user.id)}
-              >
-                <CardHeader>
+      {viewMode === "grid" && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredUsers.map((user) => (
+            <Card 
+              key={user.id} 
+              className="bg-slate-800/50 border-purple-500/30 hover:border-purple-400 transition-colors cursor-pointer transform hover:scale-105 duration-200"
+              onClick={() => handleUserClick(user.id)}
+            >
+              <CardHeader>
                   <div className="flex items-center justify-between">
                     <div>
                       <CardTitle className="text-white text-lg">{user.name}</CardTitle>
@@ -180,18 +188,17 @@ const Discover = () => {
                     </Button>
                   </div>
                 </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
+            </Card>
+          ))}
+        </div>
+      )}
 
-        {filteredUsers.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-purple-200 text-lg">No space enthusiasts found matching your criteria.</p>
-            <p className="text-purple-300 text-sm mt-2">Try adjusting your search or filter settings.</p>
-          </div>
-        )}
-      </div>
+      {filteredUsers.length === 0 && (
+        <div className="text-center py-12">
+          <p className="text-purple-200 text-lg">No space enthusiasts found matching your criteria.</p>
+          <p className="text-purple-300 text-sm mt-2">Try adjusting your search or filter settings.</p>
+        </div>
+      )}
     </div>
   );
 };

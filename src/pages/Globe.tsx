@@ -1,18 +1,17 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, Filter } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import SpaceGlobe from "@/components/SpaceGlobe";
-import { mockUsers } from "@/data/mockData";
+import { useProfiles } from "@/hooks/useProfiles";
 import PixelCard from "@/components/PixelCard";
 
 const Globe = () => {
   const navigate = useNavigate();
+  const { profiles: allUsers, loading } = useProfiles();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedInterest, setSelectedInterest] = useState("all");
 
@@ -27,7 +26,7 @@ const Globe = () => {
     "Satellite Technology"
   ];
 
-  const filteredUsers = mockUsers.filter(user => {
+  const filteredUsers = allUsers.filter(user => {
     const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          user.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          user.dream.toLowerCase().includes(searchTerm.toLowerCase());
@@ -38,13 +37,21 @@ const Globe = () => {
     return matchesSearch && matchesInterest;
   });
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
+        <div className="text-white text-xl">Loading global community...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-4xl font-bold text-white mb-2">Global Space Community</h1>
-            <p className="text-purple-200">Explore {mockUsers.length} space enthusiasts around the world</p>
+            <p className="text-purple-200">Explore {allUsers.length} space enthusiasts around the world</p>
           </div>
           <Button 
             onClick={() => navigate("/")}
@@ -84,22 +91,21 @@ const Globe = () => {
           </div>
         </div>
 
-        <PixelCard variant="pink" className="rounded-3xl">
-          <Card className="bg-transparent border-transparent rounded-3xl">
-            <CardHeader className="text-center pb-4">
-              <CardTitle className="text-white text-3xl font-bold">Interactive Global Map</CardTitle>
-              <CardDescription className="text-purple-200">
-                Click and drag to explore • Hover over pins to see profiles
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex justify-center pb-6">
-              <div className="w-full h-[70vh]">
-                <SpaceGlobe users={filteredUsers} fullscreen={true} />
-              </div>
-            </CardContent>
-          </Card>
-        </PixelCard>
-      </div>
+      <PixelCard variant="pink" className="rounded-3xl">
+        <Card className="bg-transparent border-transparent rounded-3xl">
+          <CardHeader className="text-center pb-4">
+            <CardTitle className="text-white text-3xl font-bold">Interactive Global Map</CardTitle>
+            <CardDescription className="text-purple-200">
+              Click and drag to explore • Hover over pins to see profiles
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex justify-center pb-6">
+            <div className="w-full h-[70vh]">
+              <SpaceGlobe users={filteredUsers} fullscreen={true} />
+            </div>
+          </CardContent>
+        </Card>
+      </PixelCard>
     </div>
   );
 };

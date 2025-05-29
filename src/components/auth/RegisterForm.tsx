@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,10 +7,16 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Star } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { geocodeLocation } from "@/utils/geocoding";
+import { useToast } from "@/hooks/use-toast";
 import ShinyText from "@/components/ShinyText";
 
 const RegisterForm = () => {
   const navigate = useNavigate();
+  const { signUp } = useAuth();
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
   const [registerForm, setRegisterForm] = useState({
     name: "",
     email: "",
@@ -30,9 +37,50 @@ const RegisterForm = () => {
     "Satellite Technology"
   ];
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    navigate("/discover");
+    setLoading(true);
+
+    try {
+      // Get coordinates for location
+      const coordinates = await geocodeLocation(registerForm.location);
+      
+      const metadata = {
+        name: registerForm.name,
+        location: registerForm.location,
+        interests: registerForm.interests,
+        dream: registerForm.dream,
+        latitude: coordinates?.lat,
+        longitude: coordinates?.lng
+      };
+
+      const { data, error } = await signUp(registerForm.email, registerForm.password, metadata);
+
+      if (error) {
+        toast({
+          title: "Registration Failed",
+          description: error.message,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      toast({
+        title: "Registration Successful!",
+        description: "Welcome to the FIA community!",
+      });
+
+      navigate("/discover");
+    } catch (error) {
+      console.error('Registration error:', error);
+      toast({
+        title: "Registration Failed",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const toggleInterest = (interest: string) => {
@@ -129,10 +177,11 @@ const RegisterForm = () => {
           </div>
           <Button 
             type="submit" 
+            disabled={loading}
             className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-xl h-12 text-lg font-semibold"
           >
             <Star className="mr-2 h-5 w-5" />
-            <ShinyText text="Join FIA Community" speed={3} className="text-inherit" />
+            <ShinyText text={loading ? "Creating Account..." : "Join FIA Community"} speed={3} className="text-inherit" />
           </Button>
         </form>
       </CardContent>

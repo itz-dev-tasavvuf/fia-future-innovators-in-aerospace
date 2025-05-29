@@ -1,13 +1,19 @@
-
 import { Button } from "@/components/ui/button";
-import { Rocket, Menu } from "lucide-react";
+import { Rocket, Menu, LogOut, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 import ShinyText from "@/components/ShinyText";
 
 const Header = () => {
   const navigate = useNavigate();
+  const { user, signOut } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+  };
 
   return (
     <header className="relative z-10 container mx-auto px-4 py-6">
@@ -42,6 +48,27 @@ const Header = () => {
           >
             <ShinyText text="About Founder" speed={2} className="text-purple-200 hover:text-white" />
           </Button>
+          
+          {user ? (
+            <div className="flex items-center space-x-2">
+              <Button
+                variant="ghost"
+                className="text-purple-200 hover:text-white hover:bg-purple-800/30"
+                onClick={() => navigate(`/profile/${user.id}`)}
+              >
+                <User className="h-4 w-4 mr-2" />
+                Profile
+              </Button>
+              <Button
+                variant="outline"
+                className="border-purple-500 text-purple-200 hover:bg-purple-700"
+                onClick={handleSignOut}
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                Sign Out
+              </Button>
+            </div>
+          ) : null}
         </div>
 
         {/* Mobile Menu Button */}
@@ -87,6 +114,32 @@ const Header = () => {
               >
                 <ShinyText text="About Founder" speed={2} className="text-purple-200" />
               </Button>
+              {user && (
+                <>
+                  <Button 
+                    variant="ghost" 
+                    className="w-full text-left text-purple-200 hover:text-white hover:bg-purple-800/30"
+                    onClick={() => {
+                      navigate(`/profile/${user.id}`);
+                      setIsMenuOpen(false);
+                    }}
+                  >
+                    <User className="h-4 w-4 mr-2" />
+                    Profile
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="w-full text-left border-purple-500 text-purple-200 hover:bg-purple-700"
+                    onClick={() => {
+                      handleSignOut();
+                      setIsMenuOpen(false);
+                    }}
+                  >
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Sign Out
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         )}

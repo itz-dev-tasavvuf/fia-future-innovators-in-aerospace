@@ -6,18 +6,48 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Rocket } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { mockUsers } from "@/data/mockData";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 import ShinyText from "@/components/ShinyText";
 
 const LoginForm = () => {
   const navigate = useNavigate();
+  const { signIn } = useAuth();
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const user = mockUsers.find(u => u.email === loginForm.email);
-    if (user) {
+    setLoading(true);
+
+    try {
+      const { data, error } = await signIn(loginForm.email, loginForm.password);
+
+      if (error) {
+        toast({
+          title: "Login Failed",
+          description: error.message,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      toast({
+        title: "Welcome back!",
+        description: "Successfully logged in to FIA.",
+      });
+
       navigate("/discover");
+    } catch (error) {
+      console.error('Login error:', error);
+      toast({
+        title: "Login Failed",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -56,15 +86,13 @@ const LoginForm = () => {
           </div>
           <Button 
             type="submit" 
+            disabled={loading}
             className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-xl h-12 text-lg font-semibold"
           >
             <Rocket className="mr-2 h-5 w-5" />
-            <ShinyText text="Launch Into FIA" speed={3} className="text-inherit" />
+            <ShinyText text={loading ? "Signing In..." : "Launch Into FIA"} speed={3} className="text-inherit" />
           </Button>
         </form>
-        <p className="text-sm text-purple-300 mt-6 text-center">
-          Demo: Use any email from the discover page to login
-        </p>
       </CardContent>
     </Card>
   );

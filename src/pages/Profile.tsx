@@ -1,18 +1,69 @@
 
 import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, MapPin, Star, Trophy } from "lucide-react";
 import { mockUsers } from "@/data/mockData";
+import { supabase } from "@/integrations/supabase/client";
 import PixelCard from "@/components/PixelCard";
 
 const Profile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   
-  const user = mockUsers.find(u => u.id === Number(id));
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (!id) return;
+
+      // Check if it's a mock user ID
+      if (id.startsWith('mock-')) {
+        const mockId = parseInt(id.replace('mock-', ''));
+        const mockUser = mockUsers.find(u => u.id === mockId);
+        setUser(mockUser);
+        setLoading(false);
+        return;
+      }
+
+      // Fetch real user from Supabase
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', id)
+          .single();
+
+        if (error) {
+          console.error('Error fetching profile:', error);
+          setUser(null);
+        } else {
+          setUser({
+            ...data,
+            achievements: data.achievements || []
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, [id]);
   
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
+        <div className="text-white text-xl">Loading profile...</div>
+      </div>
+    );
+  }
+
   if (!user) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
