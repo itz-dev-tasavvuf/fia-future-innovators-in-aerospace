@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Rocket, Menu, LogOut, User, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -23,7 +24,7 @@ const Header = () => {
       navigate("/");
     }
   };
-  return <header className="relative z-10 container mx-auto px-4 py-6">
+  return <header className="relative z-30 container mx-auto px-4 py-6">
       <nav className="flex items-center justify-between">
         <div className="flex items-center space-x-2 cursor-pointer" onClick={handleHomeClick}>
           <div className="bg-gradient-to-r from-purple-500 to-blue-500 p-2 rounded-lg">
