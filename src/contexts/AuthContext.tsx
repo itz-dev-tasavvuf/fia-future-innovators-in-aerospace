@@ -35,8 +35,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.log('📝 Session details:', {
           user_id: session?.user?.id,
           email: session?.user?.email,
-          user_metadata: session?.user?.user_metadata,
-          raw_user_meta_data: session?.user?.raw_user_meta_data
+          user_metadata: session?.user?.user_metadata
         });
         
         setSession(session);
@@ -101,8 +100,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     console.log('📊 SignUp response:', {
       user_id: data.user?.id,
       error: error?.message,
-      user_metadata: data.user?.user_metadata,
-      raw_user_meta_data: data.user?.raw_user_meta_data
+      user_metadata: data.user?.user_metadata
     });
     
     return { data, error };
