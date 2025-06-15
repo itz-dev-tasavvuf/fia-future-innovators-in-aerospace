@@ -37,32 +37,40 @@ export const geocodeLocation = async (location: string): Promise<{ lat: number; 
     console.error('Nominatim geocoding failed:', error);
   }
 
-  // Fallback to a simpler geocoding approach using a different service
-  try {
-    console.log('Trying fallback geocoding service...');
-    
-    const fallbackResponse = await fetch(
-      `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(location)}&key=no-api-key-required&limit=1&no_annotations=1`
-    );
-    
-    if (fallbackResponse.ok) {
-      const fallbackData = await fallbackResponse.json();
-      console.log('Fallback response:', fallbackData);
+  const openCageApiKey = import.meta.env.VITE_OPENCAGE_API_KEY;
+
+  // Fallback to OpenCageData if an API key is provided
+  if (openCageApiKey) {
+    try {
+      console.log('Trying fallback geocoding service (OpenCage)...');
       
-      if (fallbackData.results && fallbackData.results.length > 0) {
-        const result = {
-          lat: fallbackData.results[0].geometry.lat,
-          lng: fallbackData.results[0].geometry.lng
-        };
-        console.log('Fallback geocoding successful:', result);
-        return result;
+      const fallbackResponse = await fetch(
+        `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(location)}&key=${openCageApiKey}&limit=1&no_annotations=1`
+      );
+      
+      if (fallbackResponse.ok) {
+        const fallbackData = await fallbackResponse.json();
+        console.log('Fallback response:', fallbackData);
+        
+        if (fallbackData.results && fallbackData.results.length > 0) {
+          const result = {
+            lat: fallbackData.results[0].geometry.lat,
+            lng: fallbackData.results[0].geometry.lng
+          };
+          console.log('Fallback geocoding successful:', result);
+          return result;
+        }
+      } else {
+        const errorText = await fallbackResponse.text();
+        console.error(`OpenCage API error: ${fallbackResponse.status}`, errorText);
       }
+    } catch (error) {
+      console.error('OpenCage geocoding failed:', error);
     }
-  } catch (error) {
-    console.error('Fallback geocoding failed:', error);
   }
 
-  // If both fail, try to extract country/city info and use approximate coordinates
+
+  // If all geocoding services fail, try to extract country/city info and use approximate coordinates
   const approximateCoordinates = getApproximateCoordinates(location);
   if (approximateCoordinates) {
     console.log('Using approximate coordinates:', approximateCoordinates);
