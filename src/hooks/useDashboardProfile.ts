@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -72,9 +71,7 @@ export const useDashboardProfile = () => {
 
         setSaving(true);
 
-        const profileUpdateData: any = {
-            id: user.id,
-            email: user.email || "",
+        const profileDataToUpdate = {
             name: profile.name,
             location: profile.location,
             dream: profile.dream,
@@ -82,12 +79,14 @@ export const useDashboardProfile = () => {
             achievements: profile.achievements,
         };
 
+        const updatePayload: any = { ...profileDataToUpdate };
+
         if (profile.location && profile.location !== initialLocation) {
             try {
                 const coordinates = await geocodeLocation(profile.location);
                 if (coordinates) {
-                    profileUpdateData.latitude = coordinates.lat;
-                    profileUpdateData.longitude = coordinates.lng;
+                    updatePayload.latitude = coordinates.lat;
+                    updatePayload.longitude = coordinates.lng;
                 } else {
                     toast({
                         title: "Location Warning",
@@ -102,7 +101,8 @@ export const useDashboardProfile = () => {
         try {
             const { error } = await supabase
                 .from('profiles')
-                .upsert(profileUpdateData);
+                .update(updatePayload)
+                .eq('id', user.id);
 
             if (error) {
                 console.error('Error updating profile:', error);
