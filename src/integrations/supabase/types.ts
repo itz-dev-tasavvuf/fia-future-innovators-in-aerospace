@@ -12,6 +12,7 @@ export type Database = {
       profiles: {
         Row: {
           achievements: string[]
+          bio: string | null
           created_at: string
           dream: string
           email: string
@@ -25,6 +26,7 @@ export type Database = {
         }
         Insert: {
           achievements?: string[]
+          bio?: string | null
           created_at?: string
           dream: string
           email: string
@@ -38,6 +40,7 @@ export type Database = {
         }
         Update: {
           achievements?: string[]
+          bio?: string | null
           created_at?: string
           dream?: string
           email?: string

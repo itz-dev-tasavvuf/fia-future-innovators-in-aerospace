@@ -10,6 +10,7 @@ export interface ProfileState {
   dream: string;
   interests: string[];
   achievements: string[];
+  bio: string;
 }
 
 export const useDashboardProfile = () => {
@@ -22,7 +23,8 @@ export const useDashboardProfile = () => {
         location: "",
         dream: "",
         interests: [],
-        achievements: []
+        achievements: [],
+        bio: "",
     });
     const [initialLocation, setInitialLocation] = useState("");
 
@@ -32,7 +34,7 @@ export const useDashboardProfile = () => {
         try {
             const { data, error } = await supabase
                 .from('profiles')
-                .select('name, location, dream, interests, achievements')
+                .select('name, location, dream, interests, achievements, bio')
                 .eq('id', user.id)
                 .single();
 
@@ -48,7 +50,8 @@ export const useDashboardProfile = () => {
                     location: data.location || "",
                     dream: data.dream || "",
                     interests: data.interests || [],
-                    achievements: data.achievements || []
+                    achievements: data.achievements || [],
+                    bio: data.bio || "",
                 });
                 setInitialLocation(data.location || "");
             }
@@ -77,6 +80,7 @@ export const useDashboardProfile = () => {
             dream: profile.dream,
             interests: profile.interests,
             achievements: profile.achievements,
+            bio: profile.bio,
         };
 
         const updatePayload: any = { ...profileDataToUpdate };

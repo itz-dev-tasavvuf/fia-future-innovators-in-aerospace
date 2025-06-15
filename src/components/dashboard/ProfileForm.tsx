@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Save, Star } from "lucide-react";
+import { Save, Star, Info } from "lucide-react";
 import AchievementsManager from "./AchievementsManager";
 import InterestsManager from "./InterestsManager";
 import { ProfileState } from "@/hooks/useDashboardProfile";
@@ -53,6 +53,21 @@ const ProfileForm = ({ profile, setProfile, onSave, saving }: ProfileFormProps) 
           className="bg-slate-700/80 border-purple-500/40 text-white focus:border-purple-400 rounded-xl"
           placeholder="Share your space exploration dream..."
           rows={3}
+        />
+      </div>
+
+      <div>
+        <Label htmlFor="bio" className="text-white text-lg font-medium flex items-center gap-2">
+          <Info className="h-5 w-5 text-blue-400" />
+          Bio
+        </Label>
+        <Textarea
+          id="bio"
+          value={profile.bio}
+          onChange={(e) => setProfile(prev => ({ ...prev, bio: e.target.value }))}
+          className="bg-slate-700/80 border-purple-500/40 text-white focus:border-purple-400 rounded-xl"
+          placeholder="Tell everyone a little about yourself..."
+          rows={4}
         />
       </div>
 
