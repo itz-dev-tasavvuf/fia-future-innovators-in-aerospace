@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -14,7 +15,7 @@ export interface ProfileState {
 }
 
 export const useDashboardProfile = () => {
-    const { user } = useAuth();
+    const { user, setProfileAsComplete } = useAuth();
     const { toast } = useToast();
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -122,6 +123,11 @@ export const useDashboardProfile = () => {
                 title: "Success",
                 description: "Profile updated successfully!",
             });
+
+            if (profile.location && profile.dream) {
+                setProfileAsComplete();
+            }
+
             await fetchProfile(); // Re-fetch to show updated data
         } catch (error: any) {
             console.error('Unexpected error updating profile:', error);
