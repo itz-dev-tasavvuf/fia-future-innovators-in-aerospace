@@ -40,6 +40,16 @@ const RegisterForm = () => {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!registerForm.name || !registerForm.email || !registerForm.password || !registerForm.location || !registerForm.dream) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
     setGeocoding(true);
 
@@ -52,11 +62,14 @@ const RegisterForm = () => {
       setGeocoding(false);
       
       if (!coordinates) {
+        console.log('Geocoding failed, proceeding without coordinates');
         toast({
           title: "Location Warning",
           description: "Couldn't find exact coordinates for your location. You can update this later in your profile.",
           variant: "default",
         });
+      } else {
+        console.log('Geocoding successful:', coordinates);
       }
       
       const metadata = {
@@ -64,8 +77,8 @@ const RegisterForm = () => {
         location: registerForm.location,
         interests: registerForm.interests,
         dream: registerForm.dream,
-        latitude: coordinates?.lat,
-        longitude: coordinates?.lng
+        latitude: coordinates?.lat || null,
+        longitude: coordinates?.lng || null
       };
 
       console.log('Registration metadata:', metadata);
@@ -76,21 +89,35 @@ const RegisterForm = () => {
         console.error('Registration error:', error);
         toast({
           title: "Registration Failed",
-          description: error.message,
+          description: error.message || "An error occurred during registration.",
           variant: "destructive",
         });
         return;
       }
 
       console.log('Registration successful:', data);
+      
       toast({
         title: "Registration Successful!",
-        description: "Welcome to the FIA community!",
+        description: "Please check your email to confirm your account, then you can sign in.",
+        variant: "default",
       });
 
-      navigate("/home");
-    } catch (error) {
-      console.error('Registration error:', error);
+      // Reset form
+      setRegisterForm({
+        name: "",
+        email: "",
+        password: "",
+        location: "",
+        interests: [],
+        dream: ""
+      });
+
+      // Don't navigate immediately - user needs to confirm email first
+      console.log('Registration completed - user should check email for confirmation');
+
+    } catch (error: any) {
+      console.error('Unexpected registration error:', error);
       toast({
         title: "Registration Failed",
         description: "An unexpected error occurred. Please try again.",
@@ -120,7 +147,7 @@ const RegisterForm = () => {
       <CardContent>
         <form onSubmit={handleRegister} className="space-y-5">
           <div>
-            <Label htmlFor="name" className="text-purple-200 text-base font-medium">Full Name</Label>
+            <Label htmlFor="name" className="text-purple-200 text-base font-medium">Full Name *</Label>
             <Input
               id="name"
               placeholder="Your name"
@@ -131,7 +158,7 @@ const RegisterForm = () => {
             />
           </div>
           <div>
-            <Label htmlFor="reg-email" className="text-purple-200 text-base font-medium">Email</Label>
+            <Label htmlFor="reg-email" className="text-purple-200 text-base font-medium">Email *</Label>
             <Input
               id="reg-email"
               type="email"
@@ -143,7 +170,7 @@ const RegisterForm = () => {
             />
           </div>
           <div>
-            <Label htmlFor="reg-password" className="text-purple-200 text-base font-medium">Password</Label>
+            <Label htmlFor="reg-password" className="text-purple-200 text-base font-medium">Password *</Label>
             <Input
               id="reg-password"
               type="password"
@@ -151,13 +178,14 @@ const RegisterForm = () => {
               onChange={(e) => setRegisterForm({ ...registerForm, password: e.target.value })}
               className="bg-slate-700/80 border-purple-500/40 text-white focus:border-purple-400 rounded-xl h-11"
               required
+              minLength={6}
             />
           </div>
           <div>
             <Label htmlFor="location" className="text-purple-200 text-base font-medium">
               <span className="flex items-center gap-2">
                 <MapPin className="h-4 w-4" />
-                Location
+                Location *
                 {geocoding && <span className="text-xs text-yellow-400">(Finding coordinates...)</span>}
               </span>
             </Label>
@@ -193,7 +221,7 @@ const RegisterForm = () => {
             </div>
           </div>
           <div>
-            <Label htmlFor="dream" className="text-purple-200 text-base font-medium">Your Space Dream</Label>
+            <Label htmlFor="dream" className="text-purple-200 text-base font-medium">Your Space Dream *</Label>
             <Input
               id="dream"
               placeholder="What's your space exploration dream?"
