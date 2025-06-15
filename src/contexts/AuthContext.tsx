@@ -37,7 +37,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setLoading(false);
         
         // Check if profile was created after user signup
-        if (event === 'SIGNED_UP' && session?.user) {
+        if (event === 'SIGNED_IN' && session?.user) {
           setTimeout(async () => {
             console.log('Checking if profile was created for user:', session.user.id);
             const { data: profile, error } = await supabase
