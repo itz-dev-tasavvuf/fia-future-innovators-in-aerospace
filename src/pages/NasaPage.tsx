@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,8 +8,10 @@ import { AlertTriangle, Calendar, Search, Rocket, Globe, Camera, Zap } from "luc
 import Header from "@/components/Header";
 import Aurora from "@/components/Aurora";
 import { format } from "date-fns";
+import { nasaFetchWithBackup } from "@/utils/nasaFetchWithBackup";
 
-const NASA_API_KEY = "4MRhe4oeIdXNeiPmdI5jGhmm1ghjdUuJWdn8xgtQ";
+const NASA_PRIMARY_KEY = "4MRhe4oeIdXNeiPmdI5jGhmm1ghjdUuJWdn8xgtQ";
+const NASA_BACKUP_KEY = "MtcZuoTfoCwcfGJkRlhTY1Za3qlL8AAJ1M1sLAcb";
 
 interface ApodData {
   copyright?: string;
@@ -68,28 +69,30 @@ interface MarsPhoto {
   };
 }
 
+// Update fetchers to use seamless fallback
 const fetchApod = async (date?: string): Promise<ApodData> => {
-  const url = date 
-    ? `https://api.nasa.gov/planetary/apod?api_key=${NASA_API_KEY}&date=${date}`
-    : `https://api.nasa.gov/planetary/apod?api_key=${NASA_API_KEY}`;
-  const response = await fetch(url);
+  const urlBuilder = (apiKey: string) =>
+    date 
+      ? `https://api.nasa.gov/planetary/apod?api_key=${apiKey}&date=${date}`
+      : `https://api.nasa.gov/planetary/apod?api_key=${apiKey}`;
+  const response = await nasaFetchWithBackup(urlBuilder, NASA_PRIMARY_KEY, NASA_BACKUP_KEY);
   if (!response.ok) throw new Error('Failed to fetch APOD');
   return response.json();
 };
 
 const fetchNearEarthObjects = async (): Promise<NeoData> => {
   const today = format(new Date(), 'yyyy-MM-dd');
-  const response = await fetch(
-    `https://api.nasa.gov/neo/rest/v1/feed?start_date=${today}&api_key=${NASA_API_KEY}`
-  );
+  const urlBuilder = (apiKey: string) =>
+    `https://api.nasa.gov/neo/rest/v1/feed?start_date=${today}&api_key=${apiKey}`;
+  const response = await nasaFetchWithBackup(urlBuilder, NASA_PRIMARY_KEY, NASA_BACKUP_KEY);
   if (!response.ok) throw new Error('Failed to fetch NEO data');
   return response.json();
 };
 
 const fetchMarsPhotos = async (): Promise<{ photos: MarsPhoto[] }> => {
-  const response = await fetch(
-    `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key=${NASA_API_KEY}`
-  );
+  const urlBuilder = (apiKey: string) =>
+    `https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key=${apiKey}`;
+  const response = await nasaFetchWithBackup(urlBuilder, NASA_PRIMARY_KEY, NASA_BACKUP_KEY);
   if (!response.ok) throw new Error('Failed to fetch Mars photos');
   return response.json();
 };
