@@ -1,4 +1,3 @@
-
 import FloatingElements from "@/components/FloatingElements";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
@@ -8,6 +7,7 @@ import FeaturesSection from "@/components/FeaturesSection";
 import GlobePreview from "@/components/GlobePreview";
 import AuthSection from "@/components/AuthSection";
 import Aurora from "@/components/Aurora";
+import EventSection from "@/components/EventSection";
 
 const Index = () => {
   return (
@@ -28,6 +28,7 @@ const Index = () => {
         <Header />
         <main className="w-full">
           <HeroSection />
+          <EventSection />
           <StatsSection />
           <FounderSpotlight />
           <FeaturesSection />
