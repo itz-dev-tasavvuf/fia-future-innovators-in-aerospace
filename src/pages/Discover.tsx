@@ -46,7 +46,7 @@ const Discover = () => {
             <p className="text-purple-200">Connect with {allUsers.length} space enthusiasts worldwide</p>
           </div>
           <Button 
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/home")}
             variant="outline"
             className="border-purple-500 text-purple-200 hover:bg-purple-700"
           >
