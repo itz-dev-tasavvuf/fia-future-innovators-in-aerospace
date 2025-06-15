@@ -1,23 +1,18 @@
 
 import { CalendarDays, Rocket, Users, Image, Sparkles } from "lucide-react";
 
-const coverImg =
-  "https://images.unsplash.com/photo-1470813740244-df37b8c1edcb?auto=format&fit=crop&w=900&q=80";
-const marsBaseImg =
-  "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=800&q=80";
-const teamImg =
-  "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=800&q=80";
-const futureImg =
-  "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80";
+const mainBanner = "/lovable-uploads/11bce938-ccda-4701-9cec-5c8e6d1f05dc.png";
+const visual1 = "/lovable-uploads/5c70e0f5-4a9d-45f7-b31d-4543ec85d18c.png";
+const visual2 = "/lovable-uploads/7c0ecc5b-617d-4d96-a38b-892a50df8b9e.png";
 
 export default function EventPage() {
   return (
     <div className="bg-gradient-to-tr from-slate-950 via-indigo-900 to-purple-950 min-h-screen pb-12">
       <div className="relative">
         <img
-          src={coverImg}
-          className="w-full h-64 md:h-96 object-cover opacity-75"
-          alt="Space background"
+          src={mainBanner}
+          className="w-full h-72 md:h-[420px] object-cover"
+          alt="FIA Ideathon 2025 Banner"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-slate-900 opacity-90 flex flex-col items-center justify-center">
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-fuchsia-300 drop-shadow-lg text-center mt-16">
@@ -44,7 +39,7 @@ export default function EventPage() {
         </p>
 
         <div className="mb-6 grid md:grid-cols-2 gap-6 items-center">
-          <img src={marsBaseImg} className="rounded-xl shadow-lg object-cover w-full max-h-60" alt="Mars base" />
+          <img src={visual1} className="rounded-xl shadow-lg object-cover w-full max-h-60 bg-indigo-900" alt="Reimagine Space Living Visual" />
           <div>
             <h3 className="text-2xl font-bold text-fuchsia-300 mb-2 flex items-center gap-2">
               <Sparkles className="text-pink-400" size={22}/> Theme
@@ -82,7 +77,7 @@ export default function EventPage() {
         </div>
 
         <div className="mb-6 grid md:grid-cols-2 gap-6 items-center">
-          <img src={teamImg} className="rounded-xl shadow-lg object-cover w-full max-h-56" alt="Teamwork" />
+          <img src={visual2} className="rounded-xl shadow-lg object-cover w-full max-h-56 bg-indigo-900" alt="FIA Ideathon Mars Visual" />
           <div>
             <h3 className="text-xl font-bold text-fuchsia-300 mb-2 flex items-center gap-2">
               <Users className="text-blue-300" size={22}/> Who Can Participate?
@@ -127,8 +122,6 @@ export default function EventPage() {
             Submit Your Idea 🚀
           </a>
         </div>
-
-        <img src={futureImg} className="rounded-lg w-full object-cover max-h-72 opacity-95 shadow-xl my-2" alt="Future space" />
 
         <div className="bg-black/50 text-slate-300 rounded-lg px-6 py-4 mt-8 border border-fuchsia-700 text-sm">
           <p>
