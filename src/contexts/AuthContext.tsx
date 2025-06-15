@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -64,7 +63,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
-        console.log('🔐 Auth state change event:', event);
         setSession(session);
         const currentUser = session?.user ?? null;
         setUser(currentUser);
@@ -81,7 +79,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     );
 
     supabase.auth.getSession().then(({ data: { session } }) => {
-      console.log('🚀 Initial session check:', session?.user?.id || 'No session');
       if (!session) {
         setLoading(false);
         setProfileLoading(false);
@@ -97,20 +94,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signUp = async (email: string, password: string, metadata: any) => {
-    console.log('📝 SignUp initiated with metadata:', metadata);
-    
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: metadata
       }
-    });
-    
-    console.log('📊 SignUp response:', {
-      user_id: data.user?.id,
-      error: error?.message,
-      user_metadata: data.user?.user_metadata
     });
     
     return { data, error };

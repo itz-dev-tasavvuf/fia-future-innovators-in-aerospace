@@ -1,7 +1,6 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { mockUsers } from '@/data/mockData';
 
 interface Profile {
   id: string;
@@ -73,11 +72,5 @@ export const useProfiles = () => {
     }
   };
 
-  // Combine real profiles with mock data, giving real profiles priority
-  const allUsers = [...profiles, ...mockUsers.map((user, index) => ({
-    ...user,
-    id: `mock-${user.id}` // Prefix mock IDs to avoid conflicts
-  }))];
-
-  return { profiles: allUsers, loading, refetch: fetchProfiles };
+  return { profiles, loading, refetch: fetchProfiles };
 };
