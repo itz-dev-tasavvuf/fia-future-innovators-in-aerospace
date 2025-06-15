@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -14,6 +15,7 @@ import Dashboard from "./pages/Dashboard";
 import AuthenticatedHome from "./pages/AuthenticatedHome";
 import NotFound from "./pages/NotFound";
 import EventPage from "@/pages/EventPage";
+import NasaPage from "@/pages/NasaPage";
 
 const queryClient = new QueryClient();
 
@@ -27,9 +29,8 @@ const App = () => {
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
-              {/* Dedicated event page route */}
               <Route path="/event" element={<EventPage />} />
-              {/* ... keep existing routes ... */}
+              <Route path="/nasa" element={<NasaPage />} />
               <Route path="/home" element={
                 <ProtectedRoute>
                   <AuthenticatedHome />
@@ -56,7 +57,6 @@ const App = () => {
                   <Dashboard />
                 </ProtectedRoute>
               } />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

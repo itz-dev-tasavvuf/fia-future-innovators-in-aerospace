@@ -1,9 +1,8 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { Globe, Users, Settings, Map, Rocket, Star } from "lucide-react";
+import { Globe, Users, Settings, Map, Rocket, Star, Satellite } from "lucide-react";
 import Header from "@/components/Header";
 import Aurora from "@/components/Aurora";
 import SpaceGlobe from "@/components/SpaceGlobe";
@@ -64,7 +63,7 @@ const AuthenticatedHome = () => {
           <EventSection />
 
           {/* Quick Actions Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             {/* Discover Community Card */}
             <Card 
               className="bg-slate-800/50 border-purple-500/30 hover:border-purple-400 transition-all duration-300 cursor-pointer transform hover:scale-105 backdrop-blur-sm"
@@ -103,6 +102,27 @@ const AuthenticatedHome = () => {
               <CardContent>
                 <Button className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white">
                   View Globe
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* NASA Explorer Card */}
+            <Card 
+              className="bg-slate-800/50 border-orange-500/30 hover:border-orange-400 transition-all duration-300 cursor-pointer transform hover:scale-105 backdrop-blur-sm"
+              onClick={() => navigate("/nasa")}
+            >
+              <CardHeader className="text-center pb-4">
+                <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Satellite className="h-8 w-8 text-white" />
+                </div>
+                <CardTitle className="text-white text-xl">NASA Explorer</CardTitle>
+                <CardDescription className="text-orange-200">
+                  Explore NASA's data & images
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button className="w-full bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white">
+                  Explore NASA
                 </Button>
               </CardContent>
             </Card>
