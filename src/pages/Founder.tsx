@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Rocket, GraduationCap, Users, Globe, Star } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import EventSection from "@/components/EventSection";
 
 const Founder = () => {
   const navigate = useNavigate();
@@ -19,6 +20,8 @@ const Founder = () => {
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Home
         </Button>
+
+        <EventSection />
 
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12 animate-fade-in">

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +5,7 @@ import { useProfiles } from "@/hooks/useProfiles";
 import SearchFilters from "@/components/discover/SearchFilters";
 import GlobeView from "@/components/discover/GlobeView";
 import GridView from "@/components/discover/GridView";
+import EventSection from "@/components/EventSection";
 
 const Discover = () => {
   const navigate = useNavigate();
@@ -53,6 +53,8 @@ const Discover = () => {
             Back to Home
           </Button>
         </div>
+
+        <EventSection />
 
         <SearchFilters
           searchTerm={searchTerm}

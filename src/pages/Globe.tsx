@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import SpaceGlobe from "@/components/SpaceGlobe";
 import { useProfiles } from "@/hooks/useProfiles";
 import PixelCard from "@/components/PixelCard";
+import EventSection from "@/components/EventSection";
 
 const Globe = () => {
   const navigate = useNavigate();
@@ -77,6 +77,8 @@ const Globe = () => {
             Back to Home
           </Button>
         </div>
+
+        <EventSection />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           <div className="lg:col-span-1">

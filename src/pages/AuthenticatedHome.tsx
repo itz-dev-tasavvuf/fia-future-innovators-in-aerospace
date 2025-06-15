@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +8,7 @@ import Aurora from "@/components/Aurora";
 import SpaceGlobe from "@/components/SpaceGlobe";
 import { useProfiles } from "@/hooks/useProfiles";
 import ShinyText from "@/components/ShinyText";
+import EventSection from "@/components/EventSection";
 
 const AuthenticatedHome = () => {
   const navigate = useNavigate();
@@ -58,6 +58,8 @@ const AuthenticatedHome = () => {
               <ShinyText text="Space Explorer" speed={2} className="text-purple-200" />
             </div>
           </div>
+
+          <EventSection />
 
           {/* Quick Actions Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">

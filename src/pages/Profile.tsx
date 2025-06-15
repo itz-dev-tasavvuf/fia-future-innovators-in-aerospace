@@ -7,6 +7,7 @@ import { ArrowLeft, MapPin, Star, Trophy, Info } from "lucide-react";
 import { mockUsers } from "@/data/mockData";
 import { supabase } from "@/integrations/supabase/client";
 import PixelCard from "@/components/PixelCard";
+import EventSection from "@/components/EventSection";
 
 const Profile = () => {
   const { id } = useParams();
@@ -55,7 +56,7 @@ const Profile = () => {
 
     fetchUser();
   }, [id]);
-  
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
@@ -93,6 +94,8 @@ const Profile = () => {
             Back
           </Button>
         </div>
+
+        <EventSection />
 
         <PixelCard variant="blue" className="rounded-3xl max-w-4xl mx-auto">
           <Card className="bg-transparent border-transparent rounded-3xl">

@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
@@ -8,6 +7,7 @@ import { useDashboardProfile } from "@/hooks/useDashboardProfile";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import ProfileCard from "@/components/dashboard/ProfileCard";
 import { Skeleton } from "@/components/ui/skeleton";
+import EventSection from "@/components/EventSection";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -56,6 +56,8 @@ const Dashboard = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <div className="container mx-auto px-4 py-8">
         <DashboardHeader />
+        
+        <EventSection />
         
         <ProfileCard
           profile={profile}
