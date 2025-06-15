@@ -7,20 +7,22 @@ const HeroSection = () => {
   return (
     <section className="relative z-10 container mx-auto px-4 py-12 md:py-20">
       <div className="text-center mb-12 md:mb-20 animate-fade-in">
-        <h1 className="text-4xl sm:text-6xl md:text-8xl font-black text-white mb-6 md:mb-8 bg-gradient-to-r from-purple-400 via-blue-400 to-purple-400 bg-clip-text text-transparent leading-tight drop-shadow-2xl">
+        <h1 className="text-4xl sm:text-6xl md:text-8xl font-black text-white mb-8 md:mb-12 bg-gradient-to-r from-purple-400 via-blue-400 to-purple-400 bg-clip-text text-transparent leading-tight drop-shadow-2xl">
           Empowering&nbsp;
-          <RotatingText
-            texts={['Dreamers', 'Engineers', 'Explorers', 'Innovators', 'Futurists']}
-            mainClassName="px-2 sm:px-2 md:px-3 bg-cyan-300 text-black overflow-hidden py-0.5 sm:py-1 md:py-2 justify-center rounded-lg"
-            staggerFrom="last"
-            initial={{ y: "100%" }}
-            animate={{ y: 0 }}
-            exit={{ y: "-120%" }}
-            staggerDuration={0.025}
-            splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
-            transition={{ type: "spring", damping: 30, stiffness: 400 }}
-            rotationInterval={2000}
-          />
+          <div className="inline-block my-4 md:my-6">
+            <RotatingText
+              texts={['Dreamers', 'Engineers', 'Explorers', 'Innovators', 'Futurists']}
+              mainClassName="px-2 sm:px-2 md:px-3 bg-cyan-300 text-black overflow-hidden py-0.5 sm:py-1 md:py-2 justify-center rounded-lg"
+              staggerFrom="last"
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "-120%" }}
+              staggerDuration={0.025}
+              splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
+              transition={{ type: "spring", damping: 30, stiffness: 400 }}
+              rotationInterval={2000}
+            />
+          </div>
           <br />
           <span className="text-3xl sm:text-5xl md:text-7xl bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent">
             Aerospace
