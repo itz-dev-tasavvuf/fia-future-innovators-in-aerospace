@@ -37,7 +37,8 @@ export const geocodeLocation = async (location: string): Promise<{ lat: number; 
     console.error('Nominatim geocoding failed:', error);
   }
 
-  const openCageApiKey = import.meta.env.VITE_OPENCAGE_API_KEY;
+  // Using the OpenCage API key provided.
+  const openCageApiKey = 'cd00c08d9f564664b3b362d3b32b868a';
 
   // Fallback to OpenCageData if an API key is provided
   if (openCageApiKey) {
