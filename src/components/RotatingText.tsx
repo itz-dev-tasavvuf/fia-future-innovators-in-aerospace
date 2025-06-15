@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -60,9 +59,15 @@ const RotatingText = forwardRef<any, RotatingTextProps>((props, ref) => {
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
 
   const splitIntoCharacters = (text: string) => {
-    if (typeof Intl !== "undefined" && Intl.Segmenter) {
-      const segmenter = new Intl.Segmenter("en", { granularity: "grapheme" });
-      return Array.from(segmenter.segment(text), (segment) => segment.segment);
+    // Check if Intl.Segmenter is available and properly typed
+    if (typeof Intl !== "undefined" && 'Segmenter' in Intl) {
+      try {
+        const segmenter = new (Intl as any).Segmenter("en", { granularity: "grapheme" });
+        return Array.from(segmenter.segment(text), (segment: any) => segment.segment);
+      } catch (error) {
+        // Fallback to basic character splitting
+        return Array.from(text);
+      }
     }
     return Array.from(text);
   };
