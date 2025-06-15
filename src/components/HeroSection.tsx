@@ -1,12 +1,13 @@
+
 import { Badge } from "@/components/ui/badge";
 import { Globe, Users, Rocket } from "lucide-react";
 import RotatingText from './RotatingText';
 
 const HeroSection = () => {
   return (
-    <section className="relative z-10 container mx-auto px-4 py-12 md:py-20">
+    <section className="relative z-10 container mx-auto px-4 pt-20 pb-12 md:py-20">
       <div className="text-center mb-12 md:mb-20 animate-fade-in">
-        <h1 className="text-4xl sm:text-6xl md:text-8xl font-black text-white mb-8 md:mb-12 bg-gradient-to-r from-purple-400 via-blue-400 to-purple-400 bg-clip-text text-transparent leading-tight drop-shadow-2xl">
+        <h1 className="text-4xl sm:text-6xl md:text-8xl font-black text-white mb-12 md:mb-16 bg-gradient-to-r from-purple-400 via-blue-400 to-purple-400 bg-clip-text text-transparent leading-tight drop-shadow-2xl">
           Future Innovators in
           <br />
           <span className="text-3xl sm:text-5xl md:text-7xl bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent">
@@ -14,7 +15,7 @@ const HeroSection = () => {
           </span>
         </h1>
         
-        <div className="mb-8 md:mb-10">
+        <div className="mb-8 md:mb-10 my-6 md:my-8">
           <span className="text-lg sm:text-xl md:text-2xl text-purple-200 font-medium">
             Empowering&nbsp;
           </span>
