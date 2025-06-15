@@ -29,23 +29,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      (event, session) => {
         console.log('🔐 Auth state change event:', event);
         setSession(session);
         setUser(session?.user ?? null);
         
-        // This is a more reliable way to create a profile.
-        // Instead of a trigger, we explicitly call a function when a user is authenticated.
-        if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && session?.user) {
-          console.log(`👤 User authenticated (event: ${event}), ensuring profile exists...`);
-          const { error } = await supabase.rpc('ensure_profile_exists');
-          
-          if (error) {
-            console.error('❌ Error ensuring profile exists:', error.message);
-          } else {
-            console.log('✅ Profile exists or was created successfully.');
-          }
-        }
+        // The new database trigger `on_auth_user_created` now handles profile creation
+        // automatically and reliably when a new user signs up.
+        // We no longer need to call an RPC function from the client.
         
         setLoading(false);
       }
@@ -55,7 +46,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     supabase.auth.getSession().then(({ data: { session } }) => {
       console.log('🚀 Initial session check:', session?.user?.id || 'No session');
       // The onAuthStateChange listener will fire if a session exists,
-      // handling state and profile creation. If not, we just stop loading.
+      // handling state changes. If not, we just stop loading.
       if (!session) {
         setLoading(false);
       }
