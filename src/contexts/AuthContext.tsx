@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -32,55 +31,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('🔐 Auth state change event:', event);
-        console.log('📝 Session details:', {
-          user_id: session?.user?.id,
-          email: session?.user?.email,
-          user_metadata: session?.user?.user_metadata
-        });
-        
         setSession(session);
         setUser(session?.user ?? null);
-        setLoading(false);
         
-        // Check profile creation for any auth event with a user
-        if (session?.user) {
-          console.log('👤 User detected, checking profile creation...');
+        // This is a more reliable way to create a profile.
+        // Instead of a trigger, we explicitly call a function when a user is authenticated.
+        if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && session?.user) {
+          console.log(`👤 User authenticated (event: ${event}), ensuring profile exists...`);
+          const { error } = await supabase.rpc('ensure_profile_exists');
           
-          // Wait a moment for the trigger to potentially complete
-          setTimeout(async () => {
-            try {
-              console.log('🔍 Checking if profile exists for user:', session.user.id);
-              
-              const { data: profile, error } = await supabase
-                .from('profiles')
-                .select('*')
-                .eq('id', session.user.id)
-                .single();
-              
-              if (error) {
-                console.error('❌ Error checking profile:', error);
-                if (error.code === 'PGRST116') {
-                  console.warn('⚠️ Profile not found - trigger may have failed');
-                }
-              } else if (profile) {
-                console.log('✅ Profile found:', profile);
-              } else {
-                console.warn('⚠️ Profile query returned null');
-              }
-            } catch (err) {
-              console.error('💥 Unexpected error checking profile:', err);
-            }
-          }, 1000); // Reduced to 1 second
+          if (error) {
+            console.error('❌ Error ensuring profile exists:', error.message);
+          } else {
+            console.log('✅ Profile exists or was created successfully.');
+          }
         }
+        
+        setLoading(false);
       }
     );
 
     // Check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       console.log('🚀 Initial session check:', session?.user?.id || 'No session');
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
+      // The onAuthStateChange listener will fire if a session exists,
+      // handling state and profile creation. If not, we just stop loading.
+      if (!session) {
+        setLoading(false);
+      }
     });
 
     return () => subscription.unsubscribe();
