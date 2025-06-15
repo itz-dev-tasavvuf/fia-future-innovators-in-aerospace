@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,6 +11,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import PixelCard from "@/components/PixelCard";
+import { geocodeLocation } from "@/utils/geocoding";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -27,6 +27,7 @@ const Dashboard = () => {
   });
   const [newInterest, setNewInterest] = useState("");
   const [newAchievement, setNewAchievement] = useState("");
+  const [initialLocation, setInitialLocation] = useState("");
 
   const spaceInterests = [
     "Space Medicine", "Rocketry", "Astronomy", "Astrophysics", 
@@ -62,6 +63,7 @@ const Dashboard = () => {
           interests: data.interests || [],
           achievements: data.achievements || []
         });
+        setInitialLocation(data.location || "");
       }
     } catch (error) {
       console.error('Error fetching profile:', error);
@@ -72,23 +74,45 @@ const Dashboard = () => {
     if (!user) return;
 
     setLoading(true);
+
+    const profileUpdateData: any = {
+      id: user.id,
+      email: user.email || "",
+      name: profile.name,
+      location: profile.location,
+      dream: profile.dream,
+      interests: profile.interests,
+      achievements: profile.achievements,
+    };
+    
+    // Re-geocode if location has changed
+    if (profile.location && profile.location !== initialLocation) {
+      try {
+        const coordinates = await geocodeLocation(profile.location);
+        if (coordinates) {
+          profileUpdateData.latitude = coordinates.lat;
+          profileUpdateData.longitude = coordinates.lng;
+        } else {
+          toast({
+            title: "Location Warning",
+            description: "Couldn't find coordinates for your new location. It might not appear on the globe correctly.",
+          });
+        }
+      } catch (err) {
+        console.error("Geocoding failed during profile update:", err);
+      }
+    }
+
     try {
       const { error } = await supabase
         .from('profiles')
-        .upsert({
-          id: user.id,
-          name: profile.name,
-          email: user.email || "",
-          location: profile.location,
-          dream: profile.dream,
-          interests: profile.interests,
-          achievements: profile.achievements
-        });
+        .upsert(profileUpdateData);
 
       if (error) {
+        console.error('Error updating profile:', error);
         toast({
           title: "Error",
-          description: "Failed to update profile. Please try again.",
+          description: `Failed to update profile: ${error.message}`,
           variant: "destructive",
         });
         return;
@@ -98,11 +122,12 @@ const Dashboard = () => {
         title: "Success",
         description: "Profile updated successfully!",
       });
-    } catch (error) {
-      console.error('Error updating profile:', error);
+      setInitialLocation(profile.location); // Update initial location after save
+    } catch (error: any) {
+      console.error('Unexpected error updating profile:', error);
       toast({
         title: "Error",
-        description: "An unexpected error occurred. Please try again.",
+        description: `An unexpected error occurred: ${error.message}`,
         variant: "destructive",
       });
     } finally {
