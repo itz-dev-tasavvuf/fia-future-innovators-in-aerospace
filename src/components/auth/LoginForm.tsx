@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Rocket } from "lucide-react";
+import { Rocket, Github } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -12,7 +12,7 @@ import ShinyText from "@/components/ShinyText";
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  const { signIn } = useAuth();
+  const { signIn, signInWithGitHub } = useAuth();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
@@ -22,7 +22,7 @@ const LoginForm = () => {
     setLoading(true);
 
     try {
-      const { data, error } = await signIn(loginForm.email, loginForm.password);
+      const { error } = await signIn(loginForm.email, loginForm.password);
 
       if (error) {
         toast({
@@ -44,6 +44,29 @@ const LoginForm = () => {
       console.error('Login error:', error);
       toast({
         title: "Login Failed",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGithubSignIn = async () => {
+    setLoading(true);
+    try {
+      const { error } = await signInWithGitHub();
+      if (error) {
+        toast({
+          title: "GitHub Sign-In Failed",
+          description: error.message,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error('GitHub sign-in error:', error);
+      toast({
+        title: "GitHub Sign-In Failed",
         description: "An unexpected error occurred. Please try again.",
         variant: "destructive",
       });
@@ -94,6 +117,28 @@ const LoginForm = () => {
             <ShinyText text={loading ? "Signing In..." : "Launch Into FIA"} speed={3} className="text-inherit" />
           </Button>
         </form>
+
+        <div className="relative my-6">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t border-purple-500/40" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-slate-800 px-2 text-purple-200">
+              Or
+            </span>
+          </div>
+        </div>
+
+        <Button 
+          type="button" 
+          variant="outline"
+          onClick={handleGithubSignIn}
+          disabled={loading}
+          className="w-full bg-slate-700/80 border-purple-500/40 text-white hover:bg-slate-700 rounded-xl h-12 text-lg font-semibold"
+        >
+          <Github className="mr-2 h-5 w-5" />
+          Sign in with GitHub
+        </Button>
       </CardContent>
     </Card>
   );
