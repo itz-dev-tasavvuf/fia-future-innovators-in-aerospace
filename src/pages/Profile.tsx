@@ -1,10 +1,9 @@
-
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, MapPin, Star, Trophy } from "lucide-react";
+import { ArrowLeft, MapPin, Star, Trophy, Info } from "lucide-react";
 import { mockUsers } from "@/data/mockData";
 import { supabase } from "@/integrations/supabase/client";
 import PixelCard from "@/components/PixelCard";
@@ -42,7 +41,8 @@ const Profile = () => {
         } else {
           setUser({
             ...data,
-            achievements: data.achievements || []
+            achievements: data.achievements || [],
+            bio: data.bio || null
           });
         }
       } catch (error) {
@@ -116,6 +116,19 @@ const Profile = () => {
                 </h3>
                 <p className="text-lg text-purple-200 italic">"{user.dream}"</p>
               </div>
+
+              {/* Bio Section */}
+              {user.bio && (
+                <div>
+                  <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                    <Info className="h-5 w-5 text-blue-400" />
+                    Bio
+                  </h3>
+                  <div className="bg-slate-800/50 rounded-lg p-3">
+                    <p className="text-purple-200 whitespace-pre-wrap">{user.bio}</p>
+                  </div>
+                </div>
+              )}
 
               {/* Interests */}
               <div>
