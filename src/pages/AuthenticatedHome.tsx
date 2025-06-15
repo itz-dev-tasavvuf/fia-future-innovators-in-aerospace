@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +10,7 @@ import SpaceGlobe from "@/components/SpaceGlobe";
 import { useProfiles } from "@/hooks/useProfiles";
 import ShinyText from "@/components/ShinyText";
 import EventSection from "@/components/EventSection";
+import ApodSection from "@/components/ApodSection";
 
 const AuthenticatedHome = () => {
   const navigate = useNavigate();
@@ -126,6 +128,9 @@ const AuthenticatedHome = () => {
               </CardContent>
             </Card>
           </div>
+
+          {/* APOD Section */}
+          <ApodSection />
 
           {/* Interactive Globe Section */}
           <Card className="bg-slate-800/30 border-purple-500/20 backdrop-blur-md mb-8">
