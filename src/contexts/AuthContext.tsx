@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -63,15 +64,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        console.log('Auth state change:', event, session?.user?.id);
         setSession(session);
         const currentUser = session?.user ?? null;
         setUser(currentUser);
         
         if (currentUser) {
-            checkUserProfileCompleteness(currentUser.id);
+          checkUserProfileCompleteness(currentUser.id);
+          
+          // Handle OAuth redirect - redirect to home after successful auth
+          if (event === 'SIGNED_IN' && window.location.hash.includes('access_token')) {
+            // Clear the hash and redirect to home
+            window.history.replaceState(null, '', window.location.pathname);
+            window.location.href = '/home';
+          }
         } else {
-            setProfileComplete(false);
-            setProfileLoading(false);
+          setProfileComplete(false);
+          setProfileLoading(false);
         }
         
         setLoading(false);
@@ -98,7 +107,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       email,
       password,
       options: {
-        data: metadata
+        data: metadata,
+        emailRedirectTo: `${window.location.origin}/home`
       }
     });
     
