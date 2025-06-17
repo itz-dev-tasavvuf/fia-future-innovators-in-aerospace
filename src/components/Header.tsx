@@ -28,12 +28,13 @@ const Header = () => {
   return (
     <header className="relative z-30 container mx-auto px-4 py-6">
       <nav className="flex items-center justify-between">
-        <div className="flex items-center cursor-pointer" onClick={handleHomeClick}>
+        <div className="flex items-center space-x-3 cursor-pointer" onClick={handleHomeClick}>
           <img 
             src="/lovable-uploads/d3cde855-47a0-48ac-acb8-9a7eb0b3b4de.png" 
             alt="FIA Logo" 
-            className="h-12 w-auto"
+            className="h-12 w-12 rounded-full object-cover border-2 border-purple-400/50"
           />
+          <span className="text-2xl font-bold text-white">FIA</span>
         </div>
         
         {/* Desktop Menu */}
