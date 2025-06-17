@@ -16,6 +16,7 @@ import Dashboard from "./pages/Dashboard";
 import AuthenticatedHome from "./pages/AuthenticatedHome";
 import NotFound from "./pages/NotFound";
 import EventPage from "@/pages/EventPage";
+import NasaPage from "./pages/NasaPage";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,7 @@ const App = () => {
               <Route path="/" element={<Index />} />
               <Route path="/auth/callback" element={<AuthCallback />} />
               <Route path="/event" element={<EventPage />} />
+              <Route path="/nasa" element={<NasaPage />} />
               <Route path="/home" element={
                 <ProtectedRoute>
                   <AuthenticatedHome />

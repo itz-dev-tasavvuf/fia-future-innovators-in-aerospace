@@ -13,7 +13,6 @@ interface AuthContextType {
   signUp: (email: string, password: string, metadata: any) => Promise<any>;
   signIn: (email: string, password: string) => Promise<any>;
   signOut: () => Promise<void>;
-  signInWithGitHub: () => Promise<any>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -127,16 +126,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await supabase.auth.signOut();
   };
 
-  const signInWithGitHub = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'github',
-      options: {
-        redirectTo: `${window.location.origin}/home`,
-      },
-    });
-    return { data, error };
-  };
-
   const value = {
     user,
     session,
@@ -147,7 +136,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     signUp,
     signIn,
     signOut,
-    signInWithGitHub,
   };
 
   return (
