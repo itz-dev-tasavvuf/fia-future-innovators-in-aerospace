@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { Rocket, Menu, LogOut, User, Settings } from "lucide-react";
+import { Menu, LogOut, User, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -28,11 +28,12 @@ const Header = () => {
   return (
     <header className="relative z-30 container mx-auto px-4 py-6">
       <nav className="flex items-center justify-between">
-        <div className="flex items-center space-x-2 cursor-pointer" onClick={handleHomeClick}>
-          <div className="bg-gradient-to-r from-purple-500 to-blue-500 p-2 rounded-lg">
-            <Rocket className="h-6 w-6 text-white" />
-          </div>
-          <span className="text-2xl font-bold text-white">FIA</span>
+        <div className="flex items-center cursor-pointer" onClick={handleHomeClick}>
+          <img 
+            src="/lovable-uploads/d3cde855-47a0-48ac-acb8-9a7eb0b3b4de.png" 
+            alt="FIA Logo" 
+            className="h-12 w-auto"
+          />
         </div>
         
         {/* Desktop Menu */}
