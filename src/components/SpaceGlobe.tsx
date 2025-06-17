@@ -1,6 +1,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import Globe from "react-globe.gl";
 
 interface User {
@@ -21,6 +22,7 @@ interface SpaceGlobeProps {
 const SpaceGlobe = ({ users, fullscreen = false }: SpaceGlobeProps) => {
   const globeEl = useRef<any>();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [isMobile, setIsMobile] = useState(false);
   const [selectedPoint, setSelectedPoint] = useState<any>(null);
 
@@ -55,11 +57,26 @@ const SpaceGlobe = ({ users, fullscreen = false }: SpaceGlobeProps) => {
     }
   }, [fullscreen, isMobile]);
 
-  const gData = users.map(user => ({
+  // Separate current user from other users
+  const currentUserData = users.find(u => u.id === user?.id);
+  const otherUsers = users.filter(u => u.id !== user?.id);
+
+  const gData = otherUsers.map(user => ({
     ...user,
     size: isMobile ? (fullscreen ? 0.25 : 0.3) : (fullscreen ? 0.15 : 0.2),
-    color: fullscreen ? '#00ffff' : '#8b5cf6'
+    color: fullscreen ? '#00ffff' : '#8b5cf6',
+    isCurrentUser: false
   }));
+
+  // Add current user with special styling
+  const currentUserPoint = currentUserData ? [{
+    ...currentUserData,
+    size: isMobile ? (fullscreen ? 0.4 : 0.45) : (fullscreen ? 0.25 : 0.3),
+    color: '#ff6b35', // Orange color for current user
+    isCurrentUser: true
+  }] : [];
+
+  const allPoints = [...gData, ...currentUserPoint];
 
   const handlePointClick = (point: any) => {
     if (isMobile) {
@@ -82,15 +99,20 @@ const SpaceGlobe = ({ users, fullscreen = false }: SpaceGlobeProps) => {
       // On mobile, only show label for selected point
       return '';
     }
+
+    const isCurrentUser = d.isCurrentUser;
+    const borderColor = isCurrentUser ? '#ff6b35' : '#00ffff';
+    const titlePrefix = isCurrentUser ? '🌟 You are here!' : '';
     
     return `
-      <div style="background: rgba(15,23,42,0.98); padding: ${isMobile ? '20px' : '16px'}; border-radius: 12px; color: white; max-width: ${isMobile ? '320px' : '280px'}; border: 2px solid #00ffff; backdrop-filter: blur(10px); box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
+      <div style="background: rgba(15,23,42,0.98); padding: ${isMobile ? '20px' : '16px'}; border-radius: 12px; color: white; max-width: ${isMobile ? '320px' : '280px'}; border: 2px solid ${borderColor}; backdrop-filter: blur(10px); box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
+        ${isCurrentUser ? `<div style="text-align: center; margin-bottom: 12px; background: linear-gradient(135deg, #ff6b35, #f093fb); padding: ${isMobile ? '12px' : '8px'}; border-radius: 8px; font-weight: bold; font-size: ${isMobile ? '16px' : '14px'};">${titlePrefix}</div>` : ''}
         <div style="display: flex; align-items: center; margin-bottom: 12px;">
-          <div style="width: ${isMobile ? '56px' : '48px'}; height: ${isMobile ? '56px' : '48px'}; background: linear-gradient(135deg, #8b5cf6, #3b82f6); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px; border: 2px solid #00ffff;">
+          <div style="width: ${isMobile ? '56px' : '48px'}; height: ${isMobile ? '56px' : '48px'}; background: linear-gradient(135deg, ${isCurrentUser ? '#ff6b35, #f093fb' : '#8b5cf6, #3b82f6'}); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px; border: 2px solid ${borderColor};">
             <span style="color: white; font-weight: bold; font-size: ${isMobile ? '20px' : '16px'};">${d.name.charAt(0)}</span>
           </div>
           <div>
-            <strong style="color: #00ffff; font-size: ${isMobile ? '20px' : '18px'}; display: block;">${d.name}</strong>
+            <strong style="color: ${borderColor}; font-size: ${isMobile ? '20px' : '18px'}; display: block;">${d.name}</strong>
             <span style="color: #e2e8f0; font-size: ${isMobile ? '15px' : '13px'}; display: flex; align-items: center; gap: 4px;">
               <span>📍</span> ${d.location}
             </span>
@@ -101,11 +123,11 @@ const SpaceGlobe = ({ users, fullscreen = false }: SpaceGlobeProps) => {
         </div>
         <div style="margin-bottom: 12px;">
           ${d.interests.slice(0, 3).map((interest: string) => 
-            `<span style="background: #7c3aed; padding: ${isMobile ? '6px 12px' : '4px 8px'}; border-radius: 6px; font-size: ${isMobile ? '13px' : '11px'}; margin-right: 4px; margin-bottom: 4px; display: inline-block; color: white;">${interest}</span>`
+            `<span style="background: ${isCurrentUser ? '#ff6b35' : '#7c3aed'}; padding: ${isMobile ? '6px 12px' : '4px 8px'}; border-radius: 6px; font-size: ${isMobile ? '13px' : '11px'}; margin-right: 4px; margin-bottom: 4px; display: inline-block; color: white;">${interest}</span>`
           ).join('')}
         </div>
         <div style="text-align: center; padding-top: 8px; border-top: 1px solid rgba(148,163,184,0.3);">
-          <span style="background: #00ffff; color: #0f172a; padding: ${isMobile ? '10px 16px' : '6px 12px'}; border-radius: 6px; font-size: ${isMobile ? '14px' : '12px'}; font-weight: bold; cursor: pointer;">
+          <span style="background: ${borderColor}; color: #0f172a; padding: ${isMobile ? '10px 16px' : '6px 12px'}; border-radius: 6px; font-size: ${isMobile ? '14px' : '12px'}; font-weight: bold; cursor: pointer;">
             ${isMobile ? '👤 Tap Again to View Profile' : '👤 View Profile'}
           </span>
         </div>
@@ -120,7 +142,7 @@ const SpaceGlobe = ({ users, fullscreen = false }: SpaceGlobeProps) => {
       : "//unpkg.com/three-globe/example/img/earth-day.jpg",
     bumpImageUrl: "//unpkg.com/three-globe/example/img/earth-topology.png",
     backgroundImageUrl: "//unpkg.com/three-globe/example/img/night-sky.png",
-    pointsData: gData,
+    pointsData: allPoints,
     pointAltitude: "size",
     pointColor: "color",
     onPointClick: handlePointClick,
@@ -143,7 +165,7 @@ const SpaceGlobe = ({ users, fullscreen = false }: SpaceGlobeProps) => {
         <div className="absolute top-4 left-4 right-4 z-10">
           <div className="bg-slate-900/90 backdrop-blur-sm border border-purple-500/30 rounded-lg p-3">
             <p className="text-purple-200 text-sm text-center">
-              🌟 Tap a pin to see details, tap again to view profile
+              🌟 Orange pin = You are here • 🔵 Blue pins = Other users • Tap to explore
             </p>
           </div>
         </div>
@@ -155,6 +177,9 @@ const SpaceGlobe = ({ users, fullscreen = false }: SpaceGlobeProps) => {
               <div>
                 <h3 className="text-cyan-400 font-bold text-lg">{selectedPoint.name}</h3>
                 <p className="text-purple-200 text-sm">📍 {selectedPoint.location}</p>
+                {selectedPoint.isCurrentUser && (
+                  <p className="text-orange-400 text-xs font-bold">⭐ This is you!</p>
+                )}
               </div>
               <button
                 onClick={() => navigate(`/profile/${selectedPoint.id}`)}
