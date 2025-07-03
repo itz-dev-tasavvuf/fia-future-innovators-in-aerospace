@@ -48,7 +48,7 @@ export const useProfiles = () => {
   const fetchProfiles = async () => {
     try {
       const { data, error } = await supabase
-        .from('profiles')
+        .from('profiles' as any)
         .select('*')
         .order('created_at', { ascending: false });
 

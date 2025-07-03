@@ -1,3 +1,4 @@
+
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
@@ -31,7 +32,7 @@ const Profile = () => {
       // Fetch real user from Supabase
       try {
         const { data, error } = await supabase
-          .from('profiles')
+          .from('profiles' as any)
           .select('*')
           .eq('id', id)
           .single();
@@ -39,11 +40,12 @@ const Profile = () => {
         if (error) {
           console.error('Error fetching profile:', error);
           setUser(null);
-        } else {
+        } else if (data) {
+          const profileData = data as any;
           setUser({
-            ...data,
-            achievements: data.achievements || [],
-            bio: data.bio || null
+            ...profileData,
+            achievements: profileData.achievements || [],
+            bio: profileData.bio || null
           });
         }
       } catch (error) {
@@ -137,7 +139,7 @@ const Profile = () => {
               <div>
                 <h3 className="text-xl font-bold text-white mb-4">Interests & Expertise</h3>
                 <div className="flex flex-wrap gap-2">
-                  {user.interests.map((interest) => (
+                  {user.interests.map((interest: string) => (
                     <Badge key={interest} variant="secondary" className="bg-purple-600 text-white hover:bg-purple-700">
                       {interest}
                     </Badge>
@@ -152,7 +154,7 @@ const Profile = () => {
                   Achievements
                 </h3>
                 <div className="space-y-2">
-                  {user.achievements.map((achievement, index) => (
+                  {user.achievements.map((achievement: string, index: number) => (
                     <div key={index} className="bg-slate-800/50 rounded-lg p-3">
                       <p className="text-purple-200">{achievement}</p>
                     </div>

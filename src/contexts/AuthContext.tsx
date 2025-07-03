@@ -36,7 +36,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setProfileLoading(true);
     try {
       const { data, error } = await supabase
-        .from('profiles')
+        .from('profiles' as any)
         .select('location, dream')
         .eq('id', userId)
         .single();
@@ -47,7 +47,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return;
       }
       
-      if (data && data.location && data.dream) {
+      if (data && (data as any).location && (data as any).dream) {
         setProfileComplete(true);
       } else {
         setProfileComplete(false);

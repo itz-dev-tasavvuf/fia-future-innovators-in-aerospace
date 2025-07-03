@@ -34,7 +34,7 @@ export const useDashboardProfile = () => {
         setLoading(true);
         try {
             const { data, error } = await supabase
-                .from('profiles')
+                .from('profiles' as any)
                 .select('name, location, dream, interests, achievements, bio')
                 .eq('id', user.id)
                 .single();
@@ -46,15 +46,16 @@ export const useDashboardProfile = () => {
             }
 
             if (data) {
+                const profileData = data as any;
                 setProfile({
-                    name: data.name || "",
-                    location: data.location || "",
-                    dream: data.dream || "",
-                    interests: data.interests || [],
-                    achievements: data.achievements || [],
-                    bio: data.bio || "",
+                    name: profileData.name || "",
+                    location: profileData.location || "",
+                    dream: profileData.dream || "",
+                    interests: profileData.interests || [],
+                    achievements: profileData.achievements || [],
+                    bio: profileData.bio || "",
                 });
-                setInitialLocation(data.location || "");
+                setInitialLocation(profileData.location || "");
             }
         } catch (error) {
             console.error('Error fetching profile:', error);
@@ -105,7 +106,7 @@ export const useDashboardProfile = () => {
 
         try {
             const { error } = await supabase
-                .from('profiles')
+                .from('profiles' as any)
                 .update(updatePayload)
                 .eq('id', user.id);
 
