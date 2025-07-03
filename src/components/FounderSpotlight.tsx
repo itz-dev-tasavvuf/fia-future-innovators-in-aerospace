@@ -19,7 +19,7 @@ const FounderSpotlight = () => {
               <div className="relative">
                 <div className="w-40 h-40 rounded-full bg-gradient-to-r from-purple-400 to-blue-400 p-1 hover:scale-110 transition-transform duration-300">
                   <img 
-                    src="/lovable-uploads/6731ef72-4baa-4010-b951-b408582b5f28.png"
+                    src="/founder.png" 
                     alt="Firdaus Qayyum Jinabade"
                     className="w-full h-full rounded-full object-cover"
                   />

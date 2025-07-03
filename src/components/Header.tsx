@@ -30,7 +30,7 @@ const Header = () => {
       <nav className="flex items-center justify-between">
         <div className="flex items-center space-x-3 cursor-pointer" onClick={handleHomeClick}>
           <img 
-            src="/lovable-uploads/d3cde855-47a0-48ac-acb8-9a7eb0b3b4de.png" 
+            src="/favicon.ico" 
             alt="FIA Logo" 
             className="h-12 w-12 rounded-full object-cover border-2 border-purple-400/50"
           />

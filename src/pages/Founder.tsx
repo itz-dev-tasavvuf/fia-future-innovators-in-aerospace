@@ -28,7 +28,7 @@ const Founder = () => {
             <div className="relative inline-block mb-6">
               <div className="w-48 h-48 mx-auto rounded-full bg-gradient-to-r from-purple-400 to-blue-400 p-1 animate-pulse">
                 <img 
-                  src="/lovable-uploads/6731ef72-4baa-4010-b951-b408582b5f28.png"
+                  src="/founder.png" 
                   alt="Firdaus Qayyum Jinabade"
                   className="w-full h-full rounded-full object-cover"
                 />

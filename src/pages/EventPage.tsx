@@ -1,9 +1,9 @@
 
 import { CalendarDays, Rocket, Users, Image, Sparkles } from "lucide-react";
 
-const mainBanner = "/lovable-uploads/11bce938-ccda-4701-9cec-5c8e6d1f05dc.png";
-const visual1 = "/lovable-uploads/5c70e0f5-4a9d-45f7-b31d-4543ec85d18c.png";
-const visual2 = "/lovable-uploads/7c0ecc5b-617d-4d96-a38b-892a50df8b9e.png";
+const mainBanner = "/11bce938-ccda-4701-9cec-5c8e6d1f05dc.png";
+const visual1 = "/5c70e0f5-4a9d-45f7-b31d-4543ec85d18c.png";
+const visual2 = "/7c0ecc5b-617d-4d96-a38b-892a50df8b9e.png";
 
 export default function EventPage() {
   return (
